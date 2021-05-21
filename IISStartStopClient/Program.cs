@@ -13,8 +13,9 @@ namespace IISStartStopClient
             var reply = await client.StopAsync(new IISServices.WebSiteNameDto
             {
                 WebSiteName = "dev.domain.com"
-            });            
-            Console.WriteLine("Press any key to exit...");            
+            });
+            Console.WriteLine(reply.Status);
+            Console.WriteLine("Press any key to exit...");
         }
     }
 }
