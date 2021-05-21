@@ -44,7 +44,7 @@ namespace IISStartStopClient
         {
             if (string.IsNullOrEmpty(argOptions.WebSiteName))
             {
-                throw new ArgumentException("'name' arg is null or empty.")
+                throw new ArgumentException("'name' arg is null or empty.");
             }
 
             if (argOptions.Action != "start" && argOptions.Action != "stop")
