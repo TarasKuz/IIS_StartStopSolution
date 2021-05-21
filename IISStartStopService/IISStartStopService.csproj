@@ -13,4 +13,10 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference  Include="Microsoft.Web.Administration">
+      <HintPath>Lib\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
+   </ItemGroup>
+
 </Project>
