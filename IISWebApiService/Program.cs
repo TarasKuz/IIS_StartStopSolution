@@ -21,6 +21,7 @@ namespace IISWebApiService
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://localhost:5009/");
                 })
                 .UseWindowsService();
     }

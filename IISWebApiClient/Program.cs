@@ -12,13 +12,17 @@ namespace IISStartStopClient
         static async Task Main(string[] args)
         {
             ArgOptions argOptions = null;
+            // = new ArgOptions{
+            //     Action = "stop",
+            //     WebSiteName = "dev.domain.com"
+            // };
+
             Parser.Default.ParseArguments<ArgOptions>(args)
                                .WithParsed<ArgOptions>(parsedArgs => argOptions = parsedArgs);
 
             ValidateArgs(argOptions);
 
-
-            var actionUrl = "http://localhost:5001/IIS/" + argOptions.Action;
+            var actionUrl = "http://localhost:5009/IIS/" + argOptions.Action;
 
             var client = new RestClient(actionUrl);
             client.Timeout = -1;
@@ -28,10 +32,6 @@ namespace IISStartStopClient
             request.AddParameter("application/json", "{\"webSiteName\":\"" + argOptions.WebSiteName + "\"}", ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
-
-            //IISServices.CommandResult reply = null;
-            //Console.WriteLine(reply.Status);
-            Console.WriteLine(response);
         }
 
         private static void ValidateArgs(ArgOptions argOptions)
