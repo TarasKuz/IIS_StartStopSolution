@@ -5,14 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference  Include="Microsoft.Web.Administration">
-      <HintPath>Lib\Microsoft.Web.Administration.dll</HintPath>
-    </Reference>
-   </ItemGroup>
 
 </Project>

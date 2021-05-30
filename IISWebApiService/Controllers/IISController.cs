@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Web.Administration;
 using IISWebApiService.Models;
 
@@ -35,15 +31,15 @@ namespace IISWebApiService.Controllers
             try
             {
                 using var server = new ServerManager();
-                var site = server.Sites.FirstOrDefault(s => s.Name == request.WebSiteName);
+                var appPool = server.ApplicationPools.FirstOrDefault(s => s.Name == request.WebSiteName);
 
-                if (site == null)
+                if (appPool == null)
                 {
                     commandResult.Status = StatusCodes.Failure.ToString();
                     return commandResult;
                 }
 
-                var r = isStart ? site.Start() : site.Stop();
+                var r = isStart ? appPool.Start() : appPool.Stop();
                 commandResult.Status = StatusCodes.Success.ToString();
             }
             catch
