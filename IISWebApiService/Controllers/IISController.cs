@@ -1,7 +1,7 @@
 ﻿using System.Linq;
+using IISWebApiService.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Web.Administration;
-using IISWebApiService.Models;
 
 namespace IISWebApiService.Controllers
 {
@@ -10,18 +10,18 @@ namespace IISWebApiService.Controllers
     public class IISController : ControllerBase
     {
         [HttpPost("Start")]
-        public CommandResult StartPost(WebSiteNameDto webSiteNameDto)
+        public CommandResult StartPost(WebSiteNameRequest webSiteNameRequest)
         {
-            return StartStopBase(webSiteNameDto);
+            return StartStopBase(webSiteNameRequest);
         }
 
         [HttpPost("Stop")]
-        public CommandResult StopPost(WebSiteNameDto webSiteNameDto)
+        public CommandResult StopPost(WebSiteNameRequest webSiteNameRequest)
         {
-            return StartStopBase(webSiteNameDto, false);
+            return StartStopBase(webSiteNameRequest, false);
         }
 
-        private static CommandResult StartStopBase(WebSiteNameDto request, bool isStart = true)
+        private static CommandResult StartStopBase(WebSiteNameRequest request, bool isStartAction = true)
         {
             var commandResult = new CommandResult
             {
@@ -31,22 +31,41 @@ namespace IISWebApiService.Controllers
             try
             {
                 using var server = new ServerManager();
-                var appPool = server.ApplicationPools.FirstOrDefault(s => s.Name == request.WebSiteName);
-
-                if (appPool == null)
-                {
-                    commandResult.Status = StatusCodes.Failure.ToString();
-                    return commandResult;
-                }
-
-                var r = isStart ? appPool.Start() : appPool.Stop();
-                commandResult.Status = StatusCodes.Success.ToString();
+                commandResult.Status = ProcessSite(server, request, isStartAction) && ProcessPool(server, request, isStartAction)
+                    ? StatusCodes.Success.ToString()
+                    : StatusCodes.Failure.ToString();
             }
             catch
             {
             }
 
             return commandResult;
+        }
+
+        private static bool ProcessPool(ServerManager server, WebSiteNameRequest request, bool isStartAction)
+        {
+            var appPool = server.ApplicationPools.FirstOrDefault(s => s.Name == request.WebSiteName);
+
+            if (appPool == null)
+            {
+                return false;
+            }
+
+            var result = isStartAction ? appPool.Start() : appPool.Stop();
+            return true;
+        }
+
+        private static bool ProcessSite(ServerManager server, WebSiteNameRequest request, bool isStartAction)
+        {
+            var site = server.Sites.FirstOrDefault(s => s.Name == request.WebSiteName);
+
+            if (site == null)
+            {
+                return false;
+            }
+
+            var r = isStartAction ? site.Start() : site.Stop();
+            return true;
         }
     }
 }

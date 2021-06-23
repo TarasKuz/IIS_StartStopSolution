@@ -1,6 +1,6 @@
 namespace IISWebApiService.Models
 {
-    public class WebSiteNameDto
+    public class WebSiteNameRequest
     {
         public string WebSiteName { get; set; }
     }

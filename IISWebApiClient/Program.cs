@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Grpc.Net.Client;
 using CommandLine;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace IISStartStopClient
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             ArgOptions argOptions = null;
             // = new ArgOptions{
@@ -32,6 +31,12 @@ namespace IISStartStopClient
             request.AddParameter("application/json", "{\"webSiteName\":\"" + argOptions.WebSiteName + "\"}", ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
+
+            dynamic jObj = JObject.Parse(response.Content);
+            if (jObj.status != "Success")
+            {
+                throw new Exception("jObj.status != \"Success\"\n\n" + response.ErrorMessage, response.ErrorException);
+            }
         }
 
         private static void ValidateArgs(ArgOptions argOptions)
